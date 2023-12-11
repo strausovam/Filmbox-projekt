@@ -103,4 +103,111 @@ const filmy = [
 			'Na zámek v podhůří Krkonoš přijíždí jeho nový majitel Štěpán se svojí snoubenkou, krásnou komtesou Blankou, a mladším bratrem Adamem. Cestou kočár nešťastně srazí kolemjdoucí dívku, Adam jí pomůže a ona se do něj zamiluje. Na zámku Adam objeví starou vlašskou knihu, která by měla obsahovat cestu k pokladům. Tajemné značky vlašské knihy však nedokáže vyluštit ani národopisec Jiráček, který v kraji sbírá pověsti a nevychází z údivu nad tím, že zdejší lidé stále věří v Krakonoše. Na zámku se objeví záhadný cizinec a nabídne Štěpánovi, že jej k pokladu za určitých podmínek dovede. Výprava do hor může začít. Naplní se Liduščina láska k Adamovi? Jakou záhadu skrývá starý obraz na zámku Hůrka a co strašlivého se v horách kdysi odehrálo? A kdo je vlastně Krakonoš a jaké je jeho největší tajemství? (csfd.cz, Česká televize)',
 		premiera: '2022-12-24',
 	},
+	{
+		id: 'zelena-mile',
+		nazev: 'Zelená míle',
+		plakat: {
+			url: 'https://image.pmgstatic.com/cache/resized/w663/files/images/film/posters/161/172/161172937_60f7bd.jpg',
+			sirka: 525,
+			vyska: 751,
+		},
+		ochutnavka: 'Příběh odehrávající se v cele smrti v jižanském vězení.',
+		popis:
+			'Paul Edgecomb se vrací ve vzpomínkách do roku 1935, kdy byl zaměstnán v louisianské věznici jako hlavní dozorce. Tenkrát se tam setkal s výjimečným, byť duchem prostým mužem, který byl obdařen nejen velkým srdcem, ale také nadpozemskými schopnostmi. Byl to John Coffey, neprávem odsouzený na smrt za vraždu dvou malých holčiček. V té době trpěl Paul těžkým zánětem močového měchýře a také neměl šanci zbavit se sadistického, všemi nenáviděného dozorce Percyho. Jednoho dne chce s Paulem mluvit Coffey. Když se k němu přiblíží, chytí ho rukou v rozkroku, pak šokovaného Paula pustí a on uvidí, jak černoch vypustil z úst černý oblak, a současně si uvědomí, že jeho bolestivý zánět zmizel. Coffey má zvláštní schopnost, díky které vyléčí ženu správce věznice, ke které ho tajně v noci převezou, dokonce oživí cvičenou myš jednoho vězně, kterou zabil zlomyslný Percy. John Coffey, kterého čeká smrt, přijímá svůj úděl odevzdaně a bez hořkosti. (csfd.cz, Česká televize)',
+		premiera: '2000-03-16',
+	},
 ]
+
+
+
+//5. a 6. Detail filmu, Premiéra
+
+const filmDetail = document.querySelector('#detail-filmu')
+const filmName = document.querySelector('.card-title')
+const filmDescription = document.querySelector('.card-text')
+const filmPoster = document.querySelector('.col-md-5')
+const premiereElement = document.querySelector('#premiera')
+if (document.querySelector('#detail-filmu')) {
+	let filmId = location.hash.slice(1)
+	filmy.forEach((film) => {
+		if (filmId === film.id) {
+			filmName.textContent = `${film.nazev}`
+			filmDescription.textContent = `${film.popis}`
+			filmPoster.innerHTML = `<img
+			src="${film.plakat.url}"
+			alt="plakát"
+			class="img-fluid rounded-start"
+			width="663"
+			height="909"
+		/>`
+
+		let datePremiere = film.premiera
+			let daysFromPremiere = dayjs(datePremiere).diff(dayjs(), 'days')
+			premiereElement.innerHTML = `Premiéra <strong>${dayjs(datePremiere).format('D.M.YYYY')}</strong>`
+			if (daysFromPremiere < 0) {
+				if (daysFromPremiere == -1) {
+					premiereElement.innerHTML += `, což bylo před ${String(daysFromPremiere).slice(1)} dnem.`
+				} else if (daysFromPremiere < -1) {
+					premiereElement.innerHTML += `, což bylo před ${String(daysFromPremiere).slice(1)} dny.`
+				}
+			} else if (daysFromPremiere >= 0) {
+				if (daysFromPremiere == 0) {
+					premiereElement.innerHTML += `, což je dnes.`
+				} else if (daysFromPremiere == 1) {
+					premiereElement.innerHTML += `, což bude za ${String(daysFromPremiere)} den.`
+				} else if ((daysFromPremiere >= 2 && daysFromPremiere <= 4)) {
+					premiereElement.innerHTML += `, což bude za ${String(daysFromPremiere)} dny.`
+				} else if (daysFromPremiere > 4) {
+					premiereElement.innerHTML += `, což bude za ${String(daysFromPremiere)} dnů.`
+				}
+			}
+		}
+	})
+};
+
+
+//7. Hodnocení
+
+const starsElement = document.querySelectorAll('.fa-star');
+
+let number = 0;
+
+const count = (pocet) => {
+	console.log('Vstup počet: ' + pocet);
+
+	starsElement.forEach((star, index) => {
+		console.log('Star :' + star);
+		console.log('Index: ' + index);
+
+		if (index < pocet) {
+			star.classList.remove('far');
+			star.classList.add('fas');
+		} else {
+			star.classList.remove('fas');
+			star.classList.add('far');
+		}
+	});
+}
+
+const highlightClick = (event) => {
+	console.log('click');
+	number = Number(event.target.textContent);
+	console.log(number);
+	count(number);
+}
+
+const highlightEnter = (event) => {
+	console.log('enter');
+	count(Number(event.target.textContent));
+}
+
+const highlightLeave = () => {
+	count(number);
+}
+
+starsElement.forEach((star) => {
+	star.addEventListener('click', highlightClick);
+	star.addEventListener('mouseenter', highlightEnter);
+	star.addEventListener('mouseleave', highlightLeave);
+});
+
